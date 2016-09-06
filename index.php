@@ -10,7 +10,8 @@
 		if (($manufElem->value > 0) && in_array($manufElem->innertext, $checkManuf)) {
 			//echo "$manufElem->innertext - ";
 
-			$bikeTypeList = file_get_contents("https://www.louis.de/en/m/ajax/json/select-from-list?bike-selection-fieldset[manufacturer]=$manufElem->value&bike-selection-fieldset[sortBySelect]=title&get=biketype");
+			$bikeTypeList = file_get_contents("https://www.louis.de/en/m/ajax/json/select-from-list?
+				bike-selection-fieldset[manufacturer]=$manufElem->value&bike-selection-fieldset[sortBySelect]=title&get=biketype");
 			$bikeTypeList = json_decode($bikeTypeList, true);
 
 			array_shift($bikeTypeList['options']);
@@ -20,7 +21,9 @@
 					//echo $bikeElem['value'] . ' - ';
 
 					$bikeType = $bikeElem['value'];
-					$engineSizeList = file_get_contents("https://www.louis.de/en/m/ajax/json/select-from-list?bike-selection-fieldset[manufacturer]=$manufElem->value&bike-selection-fieldset[biketype]=$bikeType&bike-selection-fieldset[sortBySelect]=title&get=capacity");
+					$engineSizeList = file_get_contents("https://www.louis.de/en/m/ajax/json/select-from-list?
+						bike-selection-fieldset[manufacturer]=$manufElem->value&bike-selection-fieldset[biketype]=$bikeType&
+						bike-selection-fieldset[sortBySelect]=title&get=capacity");
 					$engineSizeList = json_decode($engineSizeList, true);
 
 					array_shift($engineSizeList['options']);
@@ -30,7 +33,9 @@
 						//echo $engineElem['value'] . ', ';
 
 						$engineSize = $engineElem['value'];
-						$data = file_get_contents("https://www.louis.de/en/m/ajax/json/select-from-list?bike-selection-fieldset[manufacturer]=$manufElem->value&bike-selection-fieldset[biketype]=$bikeType&bike-selection-fieldset[capacity]=$engineSize&bike-selection-fieldset[sortBySelect]=title&sortby=title&get=bikes");
+						$data = file_get_contents("https://www.louis.de/en/m/ajax/json/select-from-list?
+							bike-selection-fieldset[manufacturer]=$manufElem->value&bike-selection-fieldset[biketype]=$bikeType&
+							bike-selection-fieldset[capacity]=$engineSize&bike-selection-fieldset[sortBySelect]=title&sortby=title&get=bikes");
 						$data = json_decode($data, true);
 
 						array_shift($data['options']);
@@ -55,9 +60,12 @@
 							$ramaStr = substr($title, strripos($title, '(') + 1, strripos($title, ')') - strripos($title, '(') - 1);
 							//echo $ramaStr . '<br>';
 
-							echo "$manufStr, $yearStart, $yearEnd, $ramaStr <br>";
+							//echo "$manufStr, $yearStart, $yearEnd, $ramaStr <br>";
+
+							$stmt = $pdo->prepare('INSERT INTO motodb.bikedata (manuf, year1, year2, rama) VALUES (?, ?, ?, ?)');
+							$stmt->execute([$manufStr, $yearStart, $yearEnd, $ramaStr]);
 						}
-						echo '<br>';
+						//echo '<br>';
 					}
 					//echo '<br>';
 				}
@@ -65,3 +73,4 @@
 			//echo "<br>";
 		}
 	}
+	echo "I'm done.";

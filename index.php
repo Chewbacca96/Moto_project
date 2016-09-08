@@ -15,7 +15,7 @@
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
         ];
 
-        return $pdo = new PDO($dsn, $user, $pass, $options);
+        return new PDO($dsn, $user, $pass, $options);
     }
 
     function GetMarkValues($SiteStr) {
@@ -57,44 +57,28 @@
         $frameStr = substr($title, strripos($title, '(') + 1, strripos($title, ')') - strripos($title, '(') - 1);
 
         $stmt = $pdo->prepare('INSERT INTO motodb.bikedata (id, mark, type, capacity, model, yearstart, yearend, frame) 
-								VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
+			VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
         return $stmt->execute([$modelData['value'], $mark->innertext, $bikeType['value'], $modelData['capacity'],
             $manufStr, $yearStart, $yearEnd, $frameStr]);
     }
 
     $pdo = ConnectToDB($config['dbOpt']);
-
-	/*$html = file_get_html('https://www.louis.de/en');
-	$markValue = $html->find('select[id=bikedb-flyout-manufacturer]', 0)->find('option');*/
     $markValue = GetMarkValues('https://www.louis.de/en');
 
 	foreach($markValue as $markElem) {
 		if (($markElem->value > 0) && in_array($markElem->innertext, $config['mark'])) {
-			/*$bikeTypeArr = file_get_contents("https://www.louis.de/en/m/ajax/json/select-from-list?
-				bike-selection-fieldset[manufacturer]=$markElem->value&bike-selection-fieldset[sortBySelect]=title&get=biketype");
-			$bikeTypeArr = json_decode($bikeTypeArr, true);*/
             $bikeTypeArr = GetBikeType($markElem->value);
 
 			unset($bikeTypeArr['options'][0]);
 
 			foreach ($bikeTypeArr['options'] as $bikeElem) {
 				if (in_array($bikeElem['value'], $config['type'])) {
-					/*$bikeType = $bikeElem['value'];
-					$capacityArr = file_get_contents("https://www.louis.de/en/m/ajax/json/select-from-list?
-						bike-selection-fieldset[manufacturer]=$markElem->value&bike-selection-fieldset[biketype]=$bikeType&
-						bike-selection-fieldset[sortBySelect]=title&get=capacity");
-					$capacityArr = json_decode($capacityArr, true);*/
                     $capacityArr = GetCapacity($markElem->value, $bikeElem['value']);
 					
 					unset($capacityArr['options'][0]);
 					unset($capacityArr['options'][1]);
 
 					foreach ($capacityArr['options'] as $capacityElem) {
-						/*$capacitySize = $capacityElem['value'];
-						$data = file_get_contents("https://www.louis.de/en/m/ajax/json/select-from-list?
-							bike-selection-fieldset[manufacturer]=$markElem->value&bike-selection-fieldset[biketype]=$bikeType&
-							bike-selection-fieldset[capacity]=$capacitySize&bike-selection-fieldset[sortBySelect]=title&sortby=title&get=bikes");
-						$data = json_decode($data, true);*/
                         $data = GetModelData($markElem->value, $bikeElem['value'], $capacityElem['value']);
 
 						unset($data['options'][0]);

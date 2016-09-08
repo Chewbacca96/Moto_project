@@ -12,7 +12,7 @@
     ];
 
     return $config = [
-        'mark' => $checkMark,
+        'mark'  => $checkMark,
         'type'  => $checkBikeType,
         'dbOpt' => $dbOpt
     ];

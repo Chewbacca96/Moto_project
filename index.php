@@ -1,9 +1,9 @@
 <?php
 	ini_set('max_execution_time', 0);
 	include 'PHP_Simple_HTML_DOM_Parser\simple_html_dom.php';
-	require 'config.php';
+	$config = require 'config.php';
 
-    function ConnectToDB($dbOptions) {
+    function connectToDB($dbOptions) {
         $host = $dbOptions['host'];
         $db   = $dbOptions['db'];
         $user = $dbOptions['user'];
@@ -18,32 +18,32 @@
         return new PDO($dsn, $user, $pass, $options);
     }
 
-    function GetMarkValues($SiteStr) {
+    function getMark($SiteStr) {
         $html = file_get_html($SiteStr);
         return $html->find('select[id=bikedb-flyout-manufacturer]', 0)->find('option');
     }
 
-    function GetBikeType($markValue) {
+    function getBikeType($markValue) {
         $bikeTypeArr = file_get_contents("https://www.louis.de/en/m/ajax/json/select-from-list?
 			bike-selection-fieldset[manufacturer]=$markValue&bike-selection-fieldset[sortBySelect]=title&get=biketype");
         return json_decode($bikeTypeArr, true);
     }
 
-    function GetCapacity($markValue, $bikeType) {
+    function getCapacity($markValue, $bikeType) {
         $capacityArr = file_get_contents("https://www.louis.de/en/m/ajax/json/select-from-list?
 			bike-selection-fieldset[manufacturer]=$markValue&bike-selection-fieldset[biketype]=$bikeType&
 			bike-selection-fieldset[sortBySelect]=title&get=capacity");
         return json_decode($capacityArr, true);
     }
 
-    function GetModelData($markValue, $bikeType, $capacitySize) {
+    function getModel($markValue, $bikeType, $capacitySize) {
         $data = file_get_contents("https://www.louis.de/en/m/ajax/json/select-from-list?
 			bike-selection-fieldset[manufacturer]=$markValue&bike-selection-fieldset[biketype]=$bikeType&
 			bike-selection-fieldset[capacity]=$capacitySize&bike-selection-fieldset[sortBySelect]=title&sortby=title&get=bikes");
         return json_decode($data, true);
     }
 
-    function ModelDataToDB($pdo, $modelData, $mark, $bikeType) {
+    function modelToDB($pdo, $modelData, $mark, $bikeType) {
         $title = $modelData['title'];
         $manufStr = substr($title, 0, strripos($title, ', year'));
         $yearStart = substr($title, strripos($title, ', year') + 17, 4);
@@ -62,29 +62,28 @@
             $manufStr, $yearStart, $yearEnd, $frameStr]);
     }
 
-    $pdo = ConnectToDB($config['dbOpt']);
-    $markValue = GetMarkValues('https://www.louis.de/en');
+    $pdo = connectToDB($config['dbOpt']);
+    $markValue = getMark('https://www.louis.de/en');
 
 	foreach($markValue as $markElem) {
 		if (($markElem->value > 0) && in_array($markElem->innertext, $config['mark'])) {
-            $bikeTypeArr = GetBikeType($markElem->value);
+            $bikeTypeArr = getBikeType($markElem->value);
 
 			unset($bikeTypeArr['options'][0]);
 
 			foreach ($bikeTypeArr['options'] as $bikeElem) {
 				if (in_array($bikeElem['value'], $config['type'])) {
-                    $capacityArr = GetCapacity($markElem->value, $bikeElem['value']);
+                    $capacityArr = getCapacity($markElem->value, $bikeElem['value']);
 					
-					unset($capacityArr['options'][0]);
-					unset($capacityArr['options'][1]);
+					unset($capacityArr['options'][0], $capacityArr['options'][1]);
 
 					foreach ($capacityArr['options'] as $capacityElem) {
-                        $data = GetModelData($markElem->value, $bikeElem['value'], $capacityElem['value']);
+                        $data = getModel($markElem->value, $bikeElem['value'], $capacityElem['value']);
 
 						unset($data['options'][0]);
 
 						foreach ($data['options'] as $dataElem) {
-                            ModelDataToDB($pdo, $dataElem, $markElem, $bikeElem);
+                            modelToDB($pdo, $dataElem, $markElem, $bikeElem);
 						}
 					}
 				}

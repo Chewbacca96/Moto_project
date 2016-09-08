@@ -4,15 +4,15 @@
 		'MOTO GUZZI', 'MV Agusta', 'POLARIS', 'TRIUMPH', 'VICTORY'];
 	$checkBike = ['Motorrad', 'ATV/Quad', 'Roller'];
 
-	$host = 'localhost';
-	$db = 'motodb';
-	$user = 'Chewy';
-	$pass = '123';
+    $dbOpt = [
+        'host' => 'localhost',
+        'db'   => 'motodb',
+        'user' => 'Chewy',
+        'pass' => '123'
+    ];
 
-	$dsn = "mysql:host = $host; dbname = $db";
-	$options = [
-		PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-		PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-	];
-
-	$pdo = new PDO($dsn, $user, $pass, $options);
+    return $config = [
+        'manuf' => $checkManuf,
+        'bike'  => $checkBike,
+        'dbOpt' => $dbOpt
+    ];

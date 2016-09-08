@@ -1,0 +1,41 @@
+[
+    {
+        "name": "emanueleminotto/simple-html-dom",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/EmanueleMinotto/simple-html-dom.git",
+            "reference": "09b7f3ad5b62d1cc3dfc2d326845e73d2cdc2819"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/EmanueleMinotto/simple-html-dom/zipball/09b7f3ad5b62d1cc3dfc2d326845e73d2cdc2819",
+            "reference": "09b7f3ad5b62d1cc3dfc2d326845e73d2cdc2819",
+            "shasum": ""
+        },
+        "time": "2015-08-31 00:31:29",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "files": [
+                "simple_html_dom.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "S.C. Chen",
+                "email": "me578022@gmail.com"
+            },
+            {
+                "name": "Emanuele Minotto",
+                "email": "minottoemanuele@gmail.com"
+            }
+        ],
+        "description": "PHP Simple HTML DOM Parser"
+    }
+]

@@ -1,0 +1,5 @@
+{
+	"require": {
+		"emanueleminotto/simple-html-dom": "dev-master"
+	}
+}

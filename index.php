@@ -1,6 +1,6 @@
 <?php
 	ini_set('max_execution_time', 0);
-	include 'PHP_Simple_HTML_DOM_Parser\simple_html_dom.php';
+    require 'vendor\autoload.php';
 	$config = require 'config.php';
 
     function connectToDB($dbOptions) {
@@ -63,31 +63,41 @@
     }
 
     $pdo = connectToDB($config['dbOpt']);
+    $bdCheck = $pdo->query('SELECT id FROM motodb.bikedata')->fetchAll(PDO::FETCH_COLUMN);
+
     $markValue = getMark('https://www.louis.de/en');
 
 	foreach($markValue as $markElem) {
-		if (($markElem->value > 0) && in_array($markElem->innertext, $config['mark'])) {
-            $bikeTypeArr = getBikeType($markElem->value);
+		if (!in_array($markElem->innertext, $config['mark'])) {
+            continue;
+        }
 
-			unset($bikeTypeArr['options'][0]);
+        $bikeTypeArr = getBikeType($markElem->value);
 
-			foreach ($bikeTypeArr['options'] as $bikeElem) {
-				if (in_array($bikeElem['value'], $config['type'])) {
-                    $capacityArr = getCapacity($markElem->value, $bikeElem['value']);
-					
-					unset($capacityArr['options'][0], $capacityArr['options'][1]);
+        unset($bikeTypeArr['options'][0]);
 
-					foreach ($capacityArr['options'] as $capacityElem) {
-                        $data = getModel($markElem->value, $bikeElem['value'], $capacityElem['value']);
+        foreach ($bikeTypeArr['options'] as $bikeElem) {
+            if (!in_array($bikeElem['value'], $config['type'])) {
+                continue;
+            }
 
-						unset($data['options'][0]);
+            $capacityArr = getCapacity($markElem->value, $bikeElem['value']);
 
-						foreach ($data['options'] as $dataElem) {
-                            modelToDB($pdo, $dataElem, $markElem, $bikeElem);
-						}
-					}
-				}
-			}
-		}
+            unset($capacityArr['options'][0], $capacityArr['options'][1]);
+
+            foreach ($capacityArr['options'] as $capacityElem) {
+                $data = getModel($markElem->value, $bikeElem['value'], $capacityElem['value']);
+
+                unset($data['options'][0]);
+
+                foreach ($data['options'] as $dataElem) {
+                    if (in_array($dataElem['value'], $bdCheck)) {
+                        continue;
+                    }
+
+                    modelToDB($pdo, $dataElem, $markElem, $bikeElem);
+                }
+            }
+        }
 	}
 	echo "I'm done.";

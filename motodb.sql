@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1
--- Время создания: Сен 09 2016 г., 00:33
+-- Время создания: Сен 10 2016 г., 15:20
 -- Версия сервера: 5.5.25
 -- Версия PHP: 5.3.3
 
@@ -27,14 +27,16 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE IF NOT EXISTS `bikedata` (
-  `id` int(11) DEFAULT NULL,
+  `id` int(11) NOT NULL,
+  `idmodel` int(11) NOT NULL,
   `mark` text NOT NULL,
   `type` text NOT NULL,
-  `capacity` int(11) DEFAULT NULL,
+  `capacity` int(11) NOT NULL,
   `model` text NOT NULL,
-  `yearstart` int(11) DEFAULT NULL,
+  `yearstart` int(11) NOT NULL,
   `yearend` int(11) DEFAULT NULL,
-  `frame` text NOT NULL
+  `frame` text NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

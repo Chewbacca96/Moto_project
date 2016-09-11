@@ -91,7 +91,7 @@
                 unset($data['options'][0]);
 
                 foreach ($data['options'] as $dataElem) {
-                    if ($dataElem['value'] == $bdCheck->execute([$dataElem['value']])) {
+                    if ($bdCheck->execute([$dataElem['value']])) {
                         continue;
                     }
 

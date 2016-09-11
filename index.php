@@ -43,7 +43,7 @@
         return json_decode($data, true);
     }
 
-    function modelToDB($pdo, $id, $modelData, $mark, $bikeType) {
+    function modelToDB($pdo, $modelData, $mark, $bikeType) {
         $title = $modelData['title'];
         $manufStr = substr($title, 0, strripos($title, ', year'));
         $yearStart = substr($title, strripos($title, ', year') + 17, 4);
@@ -56,18 +56,14 @@
 
         $frameStr = substr($title, strripos($title, '(') + 1, strripos($title, ')') - strripos($title, '(') - 1);
 
-        $stmt = $pdo->prepare('INSERT INTO motodb.bikedata (id, idmodel, mark, type, capacity, model, yearstart, yearend, frame) 
-			VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
-        return $stmt->execute([$id, $modelData['value'], $mark->innertext, $bikeType['value'], $modelData['capacity'],
+        $stmt = $pdo->prepare('INSERT INTO motodb.bikedata (idmodel, mark, type, capacity, model, yearstart, yearend, frame) 
+			VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
+        return $stmt->execute([$modelData['value'], $mark->innertext, $bikeType['value'], $modelData['capacity'],
             $manufStr, $yearStart, $yearEnd, $frameStr]);
     }
 
     $pdo = connectToDB($config['dbOpt']);
-    $bdCheck = $pdo->query('SELECT idmodel FROM motodb.bikedata')->fetchAll(PDO::FETCH_COLUMN);
-
-    if (count($pdo->query('SELECT id FROM motodb.bikedata')->fetchAll(PDO::FETCH_COLUMN))) {
-        $id = max($pdo->query('SELECT id FROM motodb.bikedata')->fetchAll(PDO::FETCH_COLUMN)) + 1;
-    } else { $id = 1; }
+    $bdCheck = $pdo->prepare('SELECT idmodel FROM motodb.bikedata WHERE idmodel = ?');
 
     $markValue = getMark('https://www.louis.de/en');
 
@@ -95,12 +91,11 @@
                 unset($data['options'][0]);
 
                 foreach ($data['options'] as $dataElem) {
-                    if (in_array($dataElem['value'], $bdCheck)) {
+                    if ($dataElem['value'] == $bdCheck->execute([$dataElem['value']])) {
                         continue;
                     }
 
-                    modelToDB($pdo, $id, $dataElem, $markElem, $bikeElem);
-                    $id++;
+                    modelToDB($pdo, $dataElem, $markElem, $bikeElem);
                 }
             }
         }

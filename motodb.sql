@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1
--- Время создания: Сен 11 2016 г., 13:12
+-- Время создания: Сен 12 2016 г., 21:41
 -- Версия сервера: 5.5.25
 -- Версия PHP: 5.3.3
 
@@ -36,7 +36,8 @@ CREATE TABLE IF NOT EXISTS `bikedata` (
   `yearstart` int(11) NOT NULL,
   `yearend` int(11) DEFAULT NULL,
   `frame` text NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `idmodel` (`idmodel`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -1,5 +1,7 @@
 <?php
 	ini_set('max_execution_time', 0);
+    ini_set('log_errors', 'On');
+    ini_set('error_log', 'php_errors.log');
     require 'vendor\autoload.php';
 	$config = require 'config.php';
 
@@ -43,22 +45,29 @@
         return json_decode($data, true);
     }
 
+    function checkMark($pdo, $mark) {
+        $stmt = $pdo->prepare('SELECT id, value FROM motodb.t_mark_catalog WHERE value = ?');
+        $stmt->execute([$mark]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    function checkType($pdo, $type) {
+        $stmt = $pdo->prepare('SELECT id, value FROM motodb.t_type_catalog WHERE value = ?');
+        $stmt->execute([$type]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
     function markToDB($pdo, $mark) {
-        $stmt = $pdo->prepare('INSERT INTO motodb.markcatalog (mark) VALUE (?)');
+        $stmt = $pdo->prepare('INSERT INTO motodb.t_mark_catalog (value) VALUE (?)');
         return $stmt->execute([$mark]);
     }
 
     function typeToDB($pdo, $type) {
-        $stmt = $pdo->prepare('INSERT INTO motodb.typecatalog (type) VALUE (?)');
+        $stmt = $pdo->prepare('INSERT INTO motodb.t_type_catalog (value) VALUE (?)');
         return $stmt->execute([$type]);
     }
 
-    function capacityToDB($pdo, $capacity) {
-        $stmt = $pdo->prepare('INSERT INTO motodb.capacitycatalog (capacity) VALUE (?)');
-        return $stmt->execute([$capacity]);
-    }
-
-    function modelToDB($pdo, $markid, $typeid, $capacityid, $modelData) {
+    function modelToDB($pdo, $markid, $typeid, $modelData) {
         $title = $modelData['title'];
         $manufStr = substr($title, 0, strripos($title, ', year'));
         $yearStart = substr($title, strripos($title, ', year') + 17, 4);
@@ -71,9 +80,9 @@
 
         $frameStr = substr($title, strripos($title, '(') + 1, strripos($title, ')') - strripos($title, '(') - 1);
 
-        $stmt = $pdo->prepare('INSERT INTO motodb.modelcatalog (markid, typeid, capacityid, idmodel, model, yearstart, yearend, frame) 
+        $stmt = $pdo->prepare('INSERT INTO motodb.t_model_catalog (fk_mark_id, fk_type_id, id_model, model, capacity, year_start, year_end, frame) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
-        return $stmt->execute([$markid, $typeid, $capacityid, $modelData['value'], $manufStr, $yearStart, $yearEnd, $frameStr]);
+        return $stmt->execute([$markid, $typeid, $modelData['value'], $manufStr, $modelData['capacity'], $yearStart, $yearEnd, $frameStr]);
     }
 
     /*function modelToDB($pdo, $modelData, $mark, $bikeType) {
@@ -97,10 +106,11 @@
 
     $pdo = connectToDB($config['dbOpt']);
     //$bdCheck = $pdo->prepare('SELECT idmodel FROM motodb.bikedata WHERE idmodel = ?');
-    $bdCheck = $pdo->prepare('SELECT idmodel FROM motodb.modelcatalog WHERE idmodel = ?');
-    $markCheck = $pdo->prepare('SELECT id, mark FROM motodb.markcatalog WHERE mark = ?');
-    $typeCheck = $pdo->prepare('SELECT id, type FROM motodb.typecatalog WHERE type = ?');
-    $capacityCheck = $pdo->prepare('SELECT id, capacity FROM motodb.capacitycatalog WHERE capacity = ?');
+    $modelCheck = $pdo->prepare('SELECT id_model FROM motodb.t_model_catalog WHERE id_model = ?');
+    //$markCheck = $pdo->prepare('SELECT id, value FROM motodb.t_mark_catalog WHERE value = ?');
+    //$typeCheck = $pdo->prepare('SELECT id, value FROM motodb.t_type_catalog WHERE value = ?');
+    $markCheck = [];
+    $typeCheck = [];
 
     $markValue = getMark('https://www.louis.de/en');
 
@@ -109,9 +119,15 @@
             continue;
         }
 
-        $markCheck->execute([$markElem->innertext]);
+        /*$markCheck->execute([$markElem->innertext]);
         if ($markElem->innertext != $markCheck->fetchColumn(1)) {
             markToDB($pdo, $markElem->innertext);
+        }*/
+        if (!in_array($markElem->innertext, $markCheck)) {
+            if ($markElem->innertext != checkMark($pdo, $markElem->innertext)['value']) {
+                markToDB($pdo, $markElem->innertext);
+                $markCheck[$markElem->innertext] = checkMark($pdo, $markElem->innertext)['id'];
+            } else { $markCheck[$markElem->innertext] = checkMark($pdo, $markElem->innertext)['id']; }
         }
 
         $bikeTypeArr = getBikeType($markElem->value);
@@ -123,9 +139,15 @@
                 continue;
             }
 
-            $typeCheck->execute([$bikeElem['value']]);
+            /*$typeCheck->execute([$bikeElem['value']]);
             if ($bikeElem['value'] != $typeCheck->fetchColumn(1)) {
                 typeToDB($pdo, $bikeElem['value']);
+            }*/
+            if (!in_array($bikeElem['value'], $typeCheck)) {
+                if ($bikeElem['value'] != checkType($pdo, $bikeElem['value'])['value']) {
+                    typeToDB($pdo, $bikeElem['value']);
+                    $typeCheck[$bikeElem['value']] = checkType($pdo, $bikeElem['value'])['id'];
+                } else { $typeCheck[$bikeElem['value']] = checkType($pdo, $bikeElem['value'])['id']; }
             }
 
             $capacityArr = getCapacity($markElem->value, $bikeElem['value']);
@@ -138,21 +160,15 @@
                 unset($data['options'][0]);
 
                 foreach ($data['options'] as $dataElem) {
-                    $capacityCheck->execute([$dataElem['capacity']]);
-                    if ($dataElem['capacity'] != $capacityCheck->fetchColumn(1)) {
-                        capacityToDB($pdo, $dataElem['capacity']);
-                    }
-
-                    $bdCheck->execute([$dataElem['value']]);
-                    if ($dataElem['value'] == $bdCheck->fetchColumn()) {
+                    $modelCheck->execute([$dataElem['value']]);
+                    if ($dataElem['value'] == $modelCheck->fetchColumn()) {
                         continue;
                     }
 
-                    $markCheck->execute([$markElem->innertext]);
-                    $typeCheck->execute([$bikeElem['value']]);
-                    $capacityCheck->execute([$dataElem['capacity']]);
+                    //$markCheck->execute([$markElem->innertext]);
+                    //$typeCheck->execute([$bikeElem['value']]);
 
-                    modelToDB($pdo, $markCheck->fetchColumn(0), $typeCheck->fetchColumn(0), $capacityCheck->fetchColumn(0), $dataElem);
+                    modelToDB($pdo, $markCheck[$markElem->innertext], $typeCheck[$bikeElem['value']], $dataElem);
                     //modelToDB($pdo, $dataElem, $markElem, $bikeElem);
                 }
             }

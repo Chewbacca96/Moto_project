@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1
--- Время создания: Сен 13 2016 г., 15:38
+-- Время создания: Сен 14 2016 г., 02:07
 -- Версия сервера: 5.5.25
 -- Версия PHP: 5.3.3
 
@@ -23,73 +23,59 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `capacitycatalog`
+-- Структура таблицы `t_mark_catalog`
 --
 
-CREATE TABLE IF NOT EXISTS `capacitycatalog` (
+CREATE TABLE IF NOT EXISTS `t_mark_catalog` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `capacity` int(11) NOT NULL,
+  `value` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=357 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `markcatalog`
+-- Структура таблицы `t_model_catalog`
 --
 
-CREATE TABLE IF NOT EXISTS `markcatalog` (
+CREATE TABLE IF NOT EXISTS `t_model_catalog` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `mark` text NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=24 ;
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `modelcatalog`
---
-
-CREATE TABLE IF NOT EXISTS `modelcatalog` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `markid` int(11) NOT NULL,
-  `typeid` int(11) NOT NULL,
-  `capacityid` int(11) NOT NULL,
-  `idmodel` int(11) NOT NULL,
+  `fk_mark_id` int(11) NOT NULL,
+  `fk_type_id` int(11) NOT NULL,
+  `id_model` int(11) NOT NULL,
   `model` text NOT NULL,
-  `yearstart` int(11) NOT NULL,
-  `yearend` int(11) DEFAULT NULL,
+  `capacity` int(11) NOT NULL,
+  `year_start` int(11) NOT NULL,
+  `year_end` int(11) DEFAULT NULL,
   `frame` text NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `idmodel` (`idmodel`),
-  KEY `markid` (`markid`),
-  KEY `typeid` (`typeid`),
-  KEY `capacityid` (`capacityid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2165 ;
+  UNIQUE KEY `idmodel` (`id_model`),
+  KEY `markid` (`fk_mark_id`),
+  KEY `typeid` (`fk_type_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `typecatalog`
+-- Структура таблицы `t_type_catalog`
 --
 
-CREATE TABLE IF NOT EXISTS `typecatalog` (
+CREATE TABLE IF NOT EXISTS `t_type_catalog` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `type` text NOT NULL,
+  `value` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 --
 -- Ограничения внешнего ключа сохраненных таблиц
 --
 
 --
--- Ограничения внешнего ключа таблицы `modelcatalog`
+-- Ограничения внешнего ключа таблицы `t_model_catalog`
 --
-ALTER TABLE `modelcatalog`
-  ADD CONSTRAINT `modelcatalog_ibfk_3` FOREIGN KEY (`capacityid`) REFERENCES `capacitycatalog` (`id`),
-  ADD CONSTRAINT `modelcatalog_ibfk_1` FOREIGN KEY (`markid`) REFERENCES `markcatalog` (`id`),
-  ADD CONSTRAINT `modelcatalog_ibfk_2` FOREIGN KEY (`typeid`) REFERENCES `typecatalog` (`id`);
+ALTER TABLE `t_model_catalog`
+  ADD CONSTRAINT `t_model_catalog_ibfk_2` FOREIGN KEY (`fk_type_id`) REFERENCES `t_type_catalog` (`id`),
+  ADD CONSTRAINT `t_model_catalog_ibfk_1` FOREIGN KEY (`fk_mark_id`) REFERENCES `t_mark_catalog` (`id`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

@@ -6,23 +6,50 @@
 	$config = require 'config.php';
 
     class Mark {
-        function __construct() {
+        const SiteStr = 'https://www.louis.de/en';
+        private $pdo;
+
+        function __construct($config) {
+            if(is_null(self::$pdo)) {
+                self::$pdo = connectToDB($config['dbOpt']);
+            }
         }
 
-        function getFromURL($SiteStr) {
-            $html = file_get_html($SiteStr);
+        function getFromURL() {
+            $html = file_get_html(self::SiteStr);
             return $html->find('select[id=bikedb-flyout-manufacturer]', 0)->find('option');
         }
 
-        function getFromDB($pdo, $mark) {
-            $stmt = $pdo->prepare('SELECT id, value FROM motodb.t_mark WHERE value = ?');
+        function getFromDB($mark) {
+            $stmt = self::$pdo->prepare('SELECT id FROM motodb.t_mark WHERE value = ?');
             $stmt->execute([$mark]);
-            return $stmt->fetch(PDO::FETCH_ASSOC);
+            return $stmt->fetchColumn();
         }
 
-        function setToDB($pdo, $mark) {
-            $stmt = $pdo->prepare('INSERT INTO motodb.t_mark (value) VALUE (?)');
+        function setToDB($mark) {
+            $stmt = self::$pdo->prepare('INSERT INTO motodb.t_mark (value) VALUE (?)');
             return $stmt->execute([$mark]);
+        }
+    }
+
+    class Type {
+        private $pdo;
+
+        function __construct($config) {
+            if(is_null(self::$pdo)) {
+                self::$pdo = connectToDB($config['dbOpt']);
+            }
+        }
+
+        function getFromDB($type) {
+            $stmt = self::$pdo->prepare('SELECT id FROM motodb.t_type WHERE value = ?');
+            $stmt->execute([$type]);
+            return $stmt->fetchColumn();
+        }
+
+        function setToDB($pdo, $type) {
+            $stmt = self::$pdo->prepare('INSERT INTO motodb.t_type (value) VALUE (?)');
+            return $stmt->execute([$type]);
         }
     }
 
@@ -72,21 +99,21 @@
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }*/
 
-    function checkType($pdo, $type) {
+    /*function checkType($pdo, $type) {
         $stmt = $pdo->prepare('SELECT id, value FROM motodb.t_type WHERE value = ?');
         $stmt->execute([$type]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
+    }*/
 
     /*function markToDB($pdo, $mark) {
         $stmt = $pdo->prepare('INSERT INTO motodb.t_mark (value) VALUE (?)');
         return $stmt->execute([$mark]);
     }*/
 
-    function typeToDB($pdo, $type) {
+    /*function typeToDB($pdo, $type) {
         $stmt = $pdo->prepare('INSERT INTO motodb.t_type (value) VALUE (?)');
         return $stmt->execute([$type]);
-    }
+    }*/
 
     function modelToDB($pdo, $markid, $typeid, $modelData) {
         $title = $modelData['title'];

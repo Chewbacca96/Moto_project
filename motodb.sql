@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1
--- Время создания: Сен 14 2016 г., 13:34
+-- Время создания: Сен 14 2016 г., 15:29
 -- Версия сервера: 5.5.25
 -- Версия PHP: 5.3.3
 
@@ -29,8 +29,9 @@ SET time_zone = "+00:00";
 CREATE TABLE IF NOT EXISTS `t_mark` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `value` text NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=23 ;
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `mark_value` (`value`(255))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -63,19 +64,9 @@ CREATE TABLE IF NOT EXISTS `t_model` (
 CREATE TABLE IF NOT EXISTS `t_type` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `value` text NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
-
---
--- Ограничения внешнего ключа сохраненных таблиц
---
-
---
--- Ограничения внешнего ключа таблицы `t_model`
---
-ALTER TABLE `t_model`
-  ADD CONSTRAINT `t_model_ibfk_2` FOREIGN KEY (`type_id`) REFERENCES `t_type` (`id`),
-  ADD CONSTRAINT `t_model_ibfk_1` FOREIGN KEY (`mark_id`) REFERENCES `t_mark` (`id`);
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `type_value` (`value`(255))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

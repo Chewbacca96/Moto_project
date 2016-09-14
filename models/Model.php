@@ -12,7 +12,9 @@ namespace ModelSpace;
     
         public function getFromURL($markValue, $bikeType, $capacitySize) {
             $data = file_get_contents("https://www.louis.de/en/m/ajax/json/select-from-list?bike-selection-fieldset[manufacturer]=$markValue&bike-selection-fieldset[biketype]=$bikeType&bike-selection-fieldset[capacity]=$capacitySize&bike-selection-fieldset[sortBySelect]=title&sortby=title&get=bikes");
-            return json_decode($data, true);
+            $data = json_decode($data, true);
+            unset($data['options'][0]);
+            return $data;
         }
     
         public function getFromDB($code) {
@@ -20,23 +22,28 @@ namespace ModelSpace;
             $stmt->execute([$code]);
             return $stmt->fetchColumn();
         }
-    
-        public function setToDB($markid, $typeid, $modelData) {
+
+        public function parseModel($modelData) {
             $title = $modelData['title'];
-            $manufStr = substr($title, 0, strripos($title, ', year'));
-            $yearStart = substr($title, strripos($title, ', year') + 17, 4);
-    
+            $data['manufStr'] = substr($title, 0, strripos($title, ', year'));
+            $data['yearStart'] = substr($title, strripos($title, ', year') + 17, 4);
+
             if (substr($title, strripos($title, ' - ') + 3, 1) == '1') {
-                $yearEnd = substr($title, strripos($title, ' - ') + 3, 4);
+                $data['yearEnd'] = substr($title, strripos($title, ' - ') + 3, 4);
             } else {
-                $yearEnd = null;
+                $data['yearEnd'] = null;
             }
-    
-            $frameStr = substr($title, strripos($title, '(') + 1, strripos($title, ')') - strripos($title, '(') - 1);
+
+            $data['frameStr'] = substr($title, strripos($title, '(') + 1, strripos($title, ')') - strripos($title, '(') - 1);
+            return $data;
+        }
+
+        public function setToDB($markID, $typeID, $modelData) {
+            $data = self::parseModel($modelData);
     
             $stmt = self::$pdo->prepare('INSERT INTO motodb.t_model (mark_id, type_id, code, model, capacity, year_start, year_end, frame) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
-            $stmt->execute([$markid, $typeid, $modelData['value'], $manufStr, $modelData['capacity'], $yearStart, $yearEnd, $frameStr]);
+            $stmt->execute([$markID, $typeID, $modelData['value'], $data['manufStr'], $modelData['capacity'], $data['yearStart'], $data['yearEnd'], $data['frameStr']]);
             return self::$pdo->lastInsertId();
         }
     }

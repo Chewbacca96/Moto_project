@@ -5,11 +5,13 @@
     require 'vendor\autoload.php';
     require 'models\Mark.php';
     require 'models\Type.php';
+    require 'models\Capacity.php';
     require 'models\Model.php';
 	$config = require 'config.php';
 
     use MarkSpace\Mark as Mark;
     use TypeSapce\Type as Type;
+    use CapacitySpace\Capacity as Capacity;
     use ModelSpace\Model as Model;
 
     function connectToDB($dbOptions) {
@@ -27,20 +29,14 @@
         return new PDO($dsn, $user, $pass, $options);
     }
 
-    function getCapacity($markValue, $bikeType) {
-        $capacityArr = file_get_contents("https://www.louis.de/en/m/ajax/json/select-from-list?
-			bike-selection-fieldset[manufacturer]=$markValue&bike-selection-fieldset[biketype]=$bikeType&
-			bike-selection-fieldset[sortBySelect]=title&get=capacity");
-        return json_decode($capacityArr, true);
-    }
-
     $Marks = new Mark($config);
     $Types = new Type($config);
+    $Size = new Capacity;
     $Models = new Model($config);
 
-    $markValue = $Marks->getFromURL();
+    $markValues = $Marks->getFromURL();
 
-	foreach($markValue as $markElem) {
+	foreach($markValues as $markElem) {
 		if (!in_array($markElem->innertext, $config['mark'])) {
             continue;
         }
@@ -48,12 +44,11 @@
         if (!$Marks->getFromDB($markElem->innertext)) {
             $Marks->setToDB($markElem->innertext);
         }
+        $markID = $Marks->getFromDB($markElem->innertext);
 
-        $bikeTypeArr = $Types->getFromURL($markElem->value);
+        $bikeTypes = $Types->getFromURL($markElem->value);
 
-        unset($bikeTypeArr['options'][0]);
-
-        foreach ($bikeTypeArr['options'] as $bikeElem) {
+        foreach ($bikeTypes['options'] as $bikeElem) {
             if (!in_array($bikeElem['value'], $config['type'])) {
                 continue;
             }
@@ -61,22 +56,19 @@
             if (!$Types->getFromDB($bikeElem['value'])) {
                 $Types->setToDB($bikeElem['value']);
             }
+            $typeID = $Types->getFromDB($bikeElem['value']);
 
-            $capacityArr = getCapacity($markElem->value, $bikeElem['value']);
+            $capacity = $Size->getFromURL($markElem->value, $bikeElem['value']);
 
-            unset($capacityArr['options'][0], $capacityArr['options'][1]);
-
-            foreach ($capacityArr['options'] as $capacityElem) {
+            foreach ($capacity['options'] as $capacityElem) {
                 $data = $Models->getFromURL($markElem->value, $bikeElem['value'], $capacityElem['value']);
-
-                unset($data['options'][0]);
 
                 foreach ($data['options'] as $dataElem) {
                     if ($Models->getFromDB($dataElem['value'])) {
                         continue;
                     }
 
-                    $Models->setToDB($Marks->getFromDB($markElem->innertext), $Types->getFromDB($bikeElem['value']), $dataElem);
+                    $Models->setToDB($markID, $typeID, $dataElem);
                 }
             }
         }

@@ -43,7 +43,7 @@
 
         $markID = $Marks->getFromDB($markElem->innertext);
         if (!$markID) {
-            $Marks->setToDB($markElem->innertext);
+            $markID = $Marks->setToDB($markElem->innertext);
         }
 
         $bikeTypes = $Types->getFromURL($markElem->value);
@@ -55,7 +55,7 @@
 
             $typeID = $Types->getFromDB($bikeElem['value']);
             if (!$typeID) {
-                $Types->setToDB($bikeElem['value']);
+                $typeID = $Types->setToDB($bikeElem['value']);
             }
 
             $capacity = $Size->getFromURL($markElem->value, $bikeElem['value']);

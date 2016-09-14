@@ -10,15 +10,15 @@ namespace ModelSpace;
             }
         }
     
-        public function getFromURL($markValue, $bikeType, $capacitySize) {
-            $data = file_get_contents("https://www.louis.de/en/m/ajax/json/select-from-list?bike-selection-fieldset[manufacturer]=$markValue&bike-selection-fieldset[biketype]=$bikeType&bike-selection-fieldset[capacity]=$capacitySize&bike-selection-fieldset[sortBySelect]=title&sortby=title&get=bikes");
+        public function getFromURL($markValue, $bikeType, $capacityValue) {
+            $data = file_get_contents("https://www.louis.de/en/m/ajax/json/select-from-list?bike-selection-fieldset[manufacturer]=$markValue&bike-selection-fieldset[biketype]=$bikeType&bike-selection-fieldset[capacity]=$capacityValue&bike-selection-fieldset[sortBySelect]=title&sortby=title&get=bikes");
             $data = json_decode($data, true);
             unset($data['options'][0]);
             return $data['options'];
         }
     
         public function getFromDB($code) {
-            $stmt = self::$pdo->prepare('SELECT code FROM motodb.t_model WHERE code = ?');
+            $stmt = self::$pdo->prepare('SELECT id FROM motodb.t_model WHERE code = ?');
             $stmt->execute([$code]);
             return $stmt->fetchColumn();
         }
@@ -39,10 +39,9 @@ namespace ModelSpace;
         }
 
         public function setToDB($markID, $typeID, $modelData) {
-            $data = self::parseModel($modelData);
+            $data = $this->parseModel($modelData);
     
-            $stmt = self::$pdo->prepare('INSERT INTO motodb.t_model (mark_id, type_id, code, model, capacity, year_start, year_end, frame) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
+            $stmt = self::$pdo->prepare('INSERT INTO motodb.t_model (mark_id, type_id, code, model, capacity, year_start, year_end, frame) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
             $stmt->execute([$markID, $typeID, $modelData['value'], $data['modelStr'], $modelData['capacity'], $data['yearStart'], $data['yearEnd'], $data['frameStr']]);
             return self::$pdo->lastInsertId();
         }

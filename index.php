@@ -48,7 +48,7 @@
 
         $bikeTypes = $Types->getFromURL($markElem->value);
 
-        foreach ($bikeTypes['options'] as $bikeElem) {
+        foreach ($bikeTypes as $bikeElem) {
             if (!in_array($bikeElem['value'], $config['type'])) {
                 continue;
             }
@@ -60,10 +60,10 @@
 
             $capacity = $Size->getFromURL($markElem->value, $bikeElem['value']);
 
-            foreach ($capacity['options'] as $capacityElem) {
+            foreach ($capacity as $capacityElem) {
                 $data = $Models->getFromURL($markElem->value, $bikeElem['value'], $capacityElem['value']);
 
-                foreach ($data['options'] as $dataElem) {
+                foreach ($data as $dataElem) {
                     if ($Models->getFromDB($dataElem['value'])) {
                         continue;
                     }

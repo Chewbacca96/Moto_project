@@ -14,7 +14,7 @@ namespace ModelSpace;
             $data = file_get_contents("https://www.louis.de/en/m/ajax/json/select-from-list?bike-selection-fieldset[manufacturer]=$markValue&bike-selection-fieldset[biketype]=$bikeType&bike-selection-fieldset[capacity]=$capacitySize&bike-selection-fieldset[sortBySelect]=title&sortby=title&get=bikes");
             $data = json_decode($data, true);
             unset($data['options'][0]);
-            return $data;
+            return $data['options'];
         }
     
         public function getFromDB($code) {

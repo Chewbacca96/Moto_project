@@ -15,7 +15,7 @@ namespace TypeSapce;
             $bikeTypes = file_get_contents("https://www.louis.de/en/m/ajax/json/select-from-list?bike-selection-fieldset[manufacturer]=$markValue&bike-selection-fieldset[sortBySelect]=title&get=biketype");
             $bikeTypes = json_decode($bikeTypes, true);
             unset($bikeTypes['options'][0]);
-            return $bikeTypes;
+            return $bikeTypes['options'];
         }
     
         public function getFromDB($type) {

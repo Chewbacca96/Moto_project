@@ -10,7 +10,7 @@
         private $pdo;
 
         function __construct($config) {
-            if(is_null(self::$pdo)) {
+            if(!self::$pdo) {
                 self::$pdo = connectToDB($config['dbOpt']);
             }
         }
@@ -28,7 +28,11 @@
 
         function setToDB($mark) {
             $stmt = self::$pdo->prepare('INSERT INTO motodb.t_mark (value) VALUE (?)');
-            return $stmt->execute([$mark]);
+            $stmt->execute([$mark]);
+
+            $stmt = self::$pdo->prepare('SELECT id FROM motodb.t_mark WHERE value = ?');
+            $stmt->execute([$mark]);
+            return $stmt->fetchColumn();
         }
     }
 
@@ -36,7 +40,7 @@
         private $pdo;
 
         function __construct($config) {
-            if(is_null(self::$pdo)) {
+            if(!self::$pdo) {
                 self::$pdo = connectToDB($config['dbOpt']);
             }
         }
@@ -49,7 +53,11 @@
 
         function setToDB($pdo, $type) {
             $stmt = self::$pdo->prepare('INSERT INTO motodb.t_type (value) VALUE (?)');
-            return $stmt->execute([$type]);
+            $stmt->execute([$type]);
+
+            $stmt = self::$pdo->prepare('SELECT id FROM motodb.t_type WHERE value = ?');
+            $stmt->execute([$type]);
+            return $stmt->fetchColumn();
         }
     }
 

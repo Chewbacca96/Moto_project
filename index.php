@@ -41,10 +41,10 @@
             continue;
         }
 
-        if (!$Marks->getFromDB($markElem->innertext)) {
+        $markID = $Marks->getFromDB($markElem->innertext);
+        if (!$markID) {
             $Marks->setToDB($markElem->innertext);
         }
-        $markID = $Marks->getFromDB($markElem->innertext);
 
         $bikeTypes = $Types->getFromURL($markElem->value);
 
@@ -53,10 +53,10 @@
                 continue;
             }
 
-            if (!$Types->getFromDB($bikeElem['value'])) {
+            $typeID = $Types->getFromDB($bikeElem['value']);
+            if (!$typeID) {
                 $Types->setToDB($bikeElem['value']);
             }
-            $typeID = $Types->getFromDB($bikeElem['value']);
 
             $capacity = $Size->getFromURL($markElem->value, $bikeElem['value']);
 

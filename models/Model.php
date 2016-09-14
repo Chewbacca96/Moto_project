@@ -25,7 +25,7 @@ namespace ModelSpace;
 
         public function parseModel($modelData) {
             $title = $modelData['title'];
-            $data['manufStr'] = substr($title, 0, strripos($title, ', year'));
+            $data['modelStr'] = substr($title, 0, strripos($title, ', year'));
             $data['yearStart'] = substr($title, strripos($title, ', year') + 17, 4);
 
             if (substr($title, strripos($title, ' - ') + 3, 1) == '1') {
@@ -43,7 +43,7 @@ namespace ModelSpace;
     
             $stmt = self::$pdo->prepare('INSERT INTO motodb.t_model (mark_id, type_id, code, model, capacity, year_start, year_end, frame) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
-            $stmt->execute([$markID, $typeID, $modelData['value'], $data['manufStr'], $modelData['capacity'], $data['yearStart'], $data['yearEnd'], $data['frameStr']]);
+            $stmt->execute([$markID, $typeID, $modelData['value'], $data['modelStr'], $modelData['capacity'], $data['yearStart'], $data['yearEnd'], $data['frameStr']]);
             return self::$pdo->lastInsertId();
         }
     }

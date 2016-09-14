@@ -36,32 +36,32 @@
 
     $markValues = $Marks->getFromURL();
 
-	foreach($markValues as $markElem) {
-		if (!in_array($markElem->innertext, $config['mark'])) {
+	foreach($markValues as $markValue) {
+		if (!in_array($markValue->innertext, $config['mark'])) {
             continue;
         }
 
-        $markID = $Marks->getFromDB($markElem->innertext);
+        $markID = $Marks->getFromDB($markValue->innertext);
         if (!$markID) {
-            $markID = $Marks->setToDB($markElem->innertext);
+            $markID = $Marks->setToDB($markValue->innertext);
         }
 
-        $bikeTypes = $Types->getFromURL($markElem->value);
+        $bikeTypes = $Types->getFromURL($markValue->value);
 
-        foreach ($bikeTypes as $bikeElem) {
-            if (!in_array($bikeElem['value'], $config['type'])) {
+        foreach ($bikeTypes as $bikeType) {
+            if (!in_array($bikeType['value'], $config['type'])) {
                 continue;
             }
 
-            $typeID = $Types->getFromDB($bikeElem['value']);
+            $typeID = $Types->getFromDB($bikeType['value']);
             if (!$typeID) {
-                $typeID = $Types->setToDB($bikeElem['value']);
+                $typeID = $Types->setToDB($bikeType['value']);
             }
 
-            $capacity = $Size->getFromURL($markElem->value, $bikeElem['value']);
+            $capacityValues = $Size->getFromURL($markValue->value, $bikeType['value']);
 
-            foreach ($capacity as $capacityElem) {
-                $data = $Models->getFromURL($markElem->value, $bikeElem['value'], $capacityElem['value']);
+            foreach ($capacityValues as $capacityValue) {
+                $data = $Models->getFromURL($markValue->value, $bikeType['value'], $capacityValue['value']);
 
                 foreach ($data as $dataElem) {
                     if ($Models->getFromDB($dataElem['value'])) {

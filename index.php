@@ -34,7 +34,6 @@
         return json_decode($capacityArr, true);
     }
 
-    $pdo = connectToDB($config['dbOpt']);
     $Marks = new Mark($config);
     $Types = new Type($config);
     $Models = new Model($config);
@@ -76,7 +75,7 @@
                     if ($Models->getFromDB($dataElem['value'])) {
                         continue;
                     }
-                    
+
                     $Models->setToDB($Marks->getFromDB($markElem->innertext), $Types->getFromDB($bikeElem['value']), $dataElem);
                 }
             }

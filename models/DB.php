@@ -1,5 +1,5 @@
 <?php
-namespace Motopitlane\models;
+namespace Motopitlane;
 
     class DB {
         static private $pdo;

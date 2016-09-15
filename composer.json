@@ -2,9 +2,10 @@
 	"require": {
 		"emanueleminotto/simple-html-dom": "dev-master"
 	},
+
 	"autoload": {
 		"psr-4": {
-		"Motopitlane\\": "/"
+			"Motopitlane\\": "models/"
 		}
 	}
 }

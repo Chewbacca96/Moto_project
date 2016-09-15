@@ -1,5 +1,5 @@
 <?php
-namespace Motopitlane\models;
+namespace Motopitlane;
 
     class Mark {
         const SITE = 'https://www.louis.de/en';

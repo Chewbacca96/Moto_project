@@ -1,15 +1,15 @@
 <?php
-namespace Motopitlane\models;
+namespace Motopitlane;
 	ini_set('max_execution_time', 0);
     ini_set('log_errors', 'On');
     ini_set('error_log', 'php_errors.log');
     require 'vendor\autoload.php';
-    require 'models\Mark.php';
-    require 'models\Type.php';
-    require 'models\Capacity.php';
-    require 'models\Model.php';
-    require 'models\DB.php';
 	$config = require 'config.php';
+
+    use Motopitlane\Mark as Mark;
+    use Motopitlane\Type as Type;
+    use Motopitlane\Capacity as Capacity;
+    use Motopitlane\Model as Model;
 
     $Marks = new Mark($config);
     $Types = new Type($config);

@@ -1,7 +1,5 @@
 <?php
-namespace TypeSapce;
-    
-    use DBSapce\DB as DB;
+namespace Motopitlane\models;
 
     class Type {
         static private $pdo;

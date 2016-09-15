@@ -1,7 +1,5 @@
 <?php
-namespace ModelSpace;
-    
-    use DBSapce\DB as DB;
+namespace Motopitlane\models;
 
     class Model {
         static private $pdo;

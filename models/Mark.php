@@ -1,7 +1,5 @@
 <?php
-namespace MarkSpace;
-
-    use DBSapce\DB as DB;
+namespace Motopitlane\models;
 
     class Mark {
         const SITE = 'https://www.louis.de/en';

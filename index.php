@@ -1,4 +1,5 @@
 <?php
+namespace Motopitlane\models;
 	ini_set('max_execution_time', 0);
     ini_set('log_errors', 'On');
     ini_set('error_log', 'php_errors.log');
@@ -9,11 +10,6 @@
     require 'models\Model.php';
     require 'models\DB.php';
 	$config = require 'config.php';
-
-    use MarkSpace\Mark as Mark;
-    use TypeSapce\Type as Type;
-    use Motopitlane\models\Capacity as Capacity;
-    use ModelSpace\Model as Model;
 
     $Marks = new Mark($config);
     $Types = new Type($config);

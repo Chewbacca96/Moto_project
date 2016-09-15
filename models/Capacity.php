@@ -1,5 +1,5 @@
 <?php
-namespace CapacitySpace;
+namespace Motopitlane\models;
 
     class Capacity {
         public function getFromURL ($markValue, $bikeType) {

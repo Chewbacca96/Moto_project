@@ -5,13 +5,12 @@
     require 'vendor\autoload.php';
     require 'models\Mark.php';
     require 'models\Type.php';
-    require 'models\Capacity.php';
     require 'models\Model.php';
 	$config = require 'config.php';
 
     use MarkSpace\Mark as Mark;
     use TypeSapce\Type as Type;
-    use CapacitySpace\Capacity as Capacity;
+    use Motopitlane\Models\Capacity as Capacity;
     use ModelSpace\Model as Model;
 
     function connectToDB($dbOptions) {

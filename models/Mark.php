@@ -40,8 +40,8 @@ namespace MarkSpace;
 
             $i = 0;
             foreach ($html as $markValue) {
-                $markValues[$i]['mark'] = $markValue->innertext;
-                $markValues[$i]['value'] = $markValue->value;
+                $markValues[$i]['value'] = $markValue->innertext;
+                $markValues[$i]['code'] = $markValue->value;
                 $i++;
             }
             return $markValues;

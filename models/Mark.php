@@ -1,6 +1,8 @@
 <?php
 namespace MarkSpace;
 
+    use DBSapce\DB as DB;
+
     class Mark {
         const SITE = 'https://www.louis.de/en';
         static private $pdo;
@@ -8,7 +10,7 @@ namespace MarkSpace;
     
         public function __construct($config) {
             if(!self::$pdo) {
-                self::$pdo = connectToDB($config['dbOpt']);
+                self::$pdo = DB::connectToDB($config['dbOpt']);
             }
         }
     

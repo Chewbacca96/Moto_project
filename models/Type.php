@@ -1,5 +1,7 @@
 <?php
 namespace TypeSapce;
+    
+    use DBSapce\DB as DB;
 
     class Type {
         static private $pdo;
@@ -7,7 +9,7 @@ namespace TypeSapce;
     
         public function __construct($config) {
             if(!self::$pdo) {
-                self::$pdo = connectToDB($config['dbOpt']);
+                self::$pdo = DB::connectToDB($config['dbOpt']);
             }
         }
 

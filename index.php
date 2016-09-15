@@ -5,30 +5,15 @@
     require 'vendor\autoload.php';
     require 'models\Mark.php';
     require 'models\Type.php';
+    require 'models\Capacity.php';
     require 'models\Model.php';
     require 'models\DB.php';
 	$config = require 'config.php';
 
     use MarkSpace\Mark as Mark;
     use TypeSapce\Type as Type;
-    use Motopitlane\Models\Capacity as Capacity;
+    use Motopitlane\models\Capacity as Capacity;
     use ModelSpace\Model as Model;
-    use DBSapce\DB as DB;
-
-    /*function connectToDB($dbOptions) {
-        $host = $dbOptions['host'];
-        $db   = $dbOptions['db'];
-        $user = $dbOptions['user'];
-        $pass = $dbOptions['pass'];
-
-        $dsn = "mysql:host = $host; dbname = $db";
-        $options = [
-            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-        ];
-
-        return new PDO($dsn, $user, $pass, $options);
-    }*/
 
     $Marks = new Mark($config);
     $Types = new Type($config);
@@ -59,9 +44,6 @@
                 $modelsData = $Models->getFromURL($markValue['code'], $bikeType['value'], $capacityValue['value']);
 
                 foreach ($modelsData as $modelData) {
-                    /*if (!$Models->getFromDB($modelData['value'])) {
-                        $Models->setToDB($markID, $typeID, $modelData);
-                    }*/
                     $Models->getFromDB($modelData, $markID, $typeID);
                 }
             }

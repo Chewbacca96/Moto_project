@@ -1,5 +1,7 @@
 <?php
 namespace ModelSpace;
+    
+    use DBSapce\DB as DB;
 
     class Model {
         static private $pdo;
@@ -7,7 +9,7 @@ namespace ModelSpace;
     
         public function __construct($config) {
             if(!self::$pdo) {
-                self::$pdo = connectToDB($config['dbOpt']);
+                self::$pdo = DB::connectToDB($config['dbOpt']);
             }
         }
 
@@ -35,7 +37,7 @@ namespace ModelSpace;
         }
 
         public function getFromDB($modelData, $markID, $typeID, $append = true) {
-            if (array_key_exists($modelData['value'], self::$modelFromDB)) {
+            if (!array_key_exists($modelData['value'], self::$modelFromDB)) {
                 $stmt = self::$pdo->prepare('SELECT id FROM motodb.t_model WHERE code = ?');
                 $stmt->execute([$modelData['value']]);
                 $stmt = $stmt->fetchColumn();

@@ -14,7 +14,6 @@ namespace Motopitlane;
         public function parseModel($modelData) {
             $title = $modelData['title'];
             $data['modelStr'] = substr($title, 0, strripos($title, ', year'));
-            //$data['yearStart'] = substr($title, strripos($title, ', year') + 17, 4);
             if (substr($title, strripos($title, ', year') + 17, 1) == '1') {
                 $data['yearStart'] = substr($title, strripos($title, ', year') + 17, 4);
             } else {

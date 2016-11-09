@@ -50,13 +50,13 @@ class Model
     {
         $title = $modelData['title'];
         $data['modelStr'] = substr($title, 0, strripos($title, ', year'));
-        if (substr($title, strripos($title, ', year') + 17, 1) == '1') {
+        if (substr($title, strripos($title, ', year') + 17, 1) == '1' || substr($title, strripos($title, ', year') + 17, 1) == '2') {
             $data['yearStart'] = substr($title, strripos($title, ', year') + 17, 4);
         } else {
             $data['yearStart'] = null;
         }
 
-        if (substr($title, strripos($title, ' - ') + 3, 1) == '1') {
+        if (substr($title, strripos($title, ' - ') + 3, 1) == '1' || substr($title, strripos($title, ' - ') + 3, 1) == '2') {
             $data['yearEnd'] = substr($title, strripos($title, ' - ') + 3, 4);
         } else {
             $data['yearEnd'] = null;

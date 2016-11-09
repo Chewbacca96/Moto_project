@@ -81,5 +81,4 @@ foreach($markValues as $markValue) {
 }
 
 $syslog->info('Script finished in '.(microtime(true) - $start).' sec.');
-
 echo "\nI'm done.\n";

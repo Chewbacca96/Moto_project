@@ -1,5 +1,5 @@
 <?php
-namespace Motopitlane;
+namespace Moto_project\models;
 
 class Type 
 {
@@ -9,12 +9,31 @@ class Type
     /**
      * Type конструктор
      *
-     * @param array $dbOptions массив опций для подключения к БД
+     * @param string $host доменное имя сервера базы данных
+     * @param string $db имя базы данных
+     * @param string $user логи пользователя базы данных
+     * @param string $pass пароль пользователя базы данных
      */
-    public function __construct($dbOptions) {
+    public function __construct($host, $db, $user, $pass) {
         if(!self::$pdo) {
-            self::$pdo = DB::connectToDB($dbOptions);
+            self::$pdo = DB::connectToDB($host, $db, $user, $pass);
         }
+    }
+
+    /**
+     * Функция парсит типы моделей
+     *
+     * @param int $markValue код марки моделей
+     *
+     * @return array массив с названиями типов
+     */
+    public function getFromURL($markValue) 
+    {
+        $bikeTypes = file_get_contents('https://www.louis.de/en/m/ajax/json/select-from-list?bike-selection-fieldset[manufacturer]='.$markValue.'&bike-selection-fieldset[sortBySelect]=title&get=biketype');
+        $bikeTypes = json_decode($bikeTypes, true);
+        unset($bikeTypes['options'][0]);
+
+        return $bikeTypes['options'];
     }
 
     /**
@@ -28,6 +47,7 @@ class Type
     {
         $stmt = self::$pdo->prepare('INSERT INTO motodb.t_type (value) VALUE (?)');
         $stmt->execute([$type]);
+
         return self::$pdo->lastInsertId();
     }
 
@@ -53,21 +73,7 @@ class Type
                 self::$typeFromDB[$type] = null;
             }
         }
+        
         return self::$typeFromDB[$type];
-    }
-
-    /**
-     * Функция парсит типы моделей
-     *
-     * @param int $markValue код марки моделей
-     *
-     * @return array массив с названиями типов
-     */
-    public function getFromURL($markValue) 
-    {
-        $bikeTypes = file_get_contents("https://www.louis.de/en/m/ajax/json/select-from-list?bike-selection-fieldset[manufacturer]=$markValue&bike-selection-fieldset[sortBySelect]=title&get=biketype");
-        $bikeTypes = json_decode($bikeTypes, true);
-        unset($bikeTypes['options'][0]);
-        return $bikeTypes['options'];
     }
 }

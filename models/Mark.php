@@ -1,5 +1,5 @@
 <?php
-namespace Motopitlane;
+namespace Moto_project\models;
 
 class Mark 
 {
@@ -10,13 +10,36 @@ class Mark
     /**
      * Mark конструктор
      *
-     * @param array $dbOptions массив опций для подключения к БД
+     * @param string $host доменное имя сервера базы данных
+     * @param string $db имя базы данных
+     * @param string $user логи пользователя базы данных
+     * @param string $pass пароль пользователя базы данных
      */
-    public function __construct($dbOptions) 
+    public function __construct($host, $db, $user, $pass) 
     {
         if(!self::$pdo) {
-            self::$pdo = DB::connectToDB($dbOptions);
+            self::$pdo = DB::connectToDB($host, $db, $user, $pass);
         }
+    }
+
+    /**
+     * Функция парсит название и коды марок с сайта
+     *
+     * @return array массив названий и кодов марок
+     */
+    public function getFromURL() 
+    {
+        $html = file_get_html(self::SITE);
+        $html = $html->find('select[id=bikedb-flyout-manufacturer]', 0)->find('option');
+
+        $i = 0;
+        foreach ($html as $markValue) {
+            $markValues[$i]['value'] = $markValue->innertext;
+            $markValues[$i]['code'] = $markValue->value;
+            $i++;
+        }
+
+        return $markValues;
     }
 
     /**
@@ -30,6 +53,7 @@ class Mark
     {
         $stmt = self::$pdo->prepare('INSERT INTO motodb.t_mark (value) VALUE (?)');
         $stmt->execute([$mark]);
+
         return self::$pdo->lastInsertId();
     }
 
@@ -55,25 +79,7 @@ class Mark
                 self::$markFromDB[$mark] = null;
             }
         }
+        
         return self::$markFromDB[$mark];
-    }
-
-    /**
-     * Функция парсит название и коды марок с сайта
-     *
-     * @return array массив названий и кодов марок
-     */
-    public function getFromURL() 
-    {
-        $html = file_get_html(self::SITE);
-        $html = $html->find('select[id=bikedb-flyout-manufacturer]', 0)->find('option');
-
-        $i = 0;
-        foreach ($html as $markValue) {
-            $markValues[$i]['value'] = $markValue->innertext;
-            $markValues[$i]['code'] = $markValue->value;
-            $i++;
-        }
-        return $markValues;
     }
 }

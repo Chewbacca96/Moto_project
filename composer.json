@@ -1,11 +1,12 @@
 {
 	"require": {
-		"emanueleminotto/simple-html-dom": "dev-master"
+		"emanueleminotto/simple-html-dom": "dev-master",
+		"monolog/monolog": "1.21.0"
 	},
 
 	"autoload": {
 		"psr-4": {
-			"Motopitlane\\": "models/"
+			"Moto_project\\": ""
 		}
 	}
 }

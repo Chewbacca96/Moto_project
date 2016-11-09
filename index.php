@@ -1,23 +1,47 @@
 <?php
-namespace Motopitlane;
+namespace Moto_project;
 
-use Motopitlane\Mark as Mark;
-use Motopitlane\Type as Type;
-use Motopitlane\Capacity as Capacity;
-use Motopitlane\Model as Model;
+use Monolog\Logger;
+use Monolog\Handler\SyslogHandler;
+use Moto_project\models\Mark as Mark;
+use Moto_project\models\Type as Type;
+use Moto_project\models\Capacity as Capacity;
+use Moto_project\models\Model as Model;
 
 require 'vendor/autoload.php';
 $config = require (isset($argv[1])) ? $argv[1] : 'config.php';
 
-ini_set('max_execution_time', 0);
 ini_set('log_errors', 'On');
-ini_set('error_log', 'php_errors.log');
+ini_set('error_log', $config['error_log']);
+ini_set('max_execution_time', 0);
 date_default_timezone_set('Europe/Moscow');
 
-$Marks  = new Mark($config['dbOpt']);
-$Types  = new Type($config['dbOpt']);
+$start = microtime(true);
+
+$syslog = new Logger('Syslog');
+$syslog->pushHandler(new SyslogHandler('motoCrawler'));
+
+$syslog->info('The script '.$argv[0].' started.');
+
+$Marks  = new Mark(
+    $config['dbOpt']['host'],
+    $config['dbOpt']['db'],
+    $config['dbOpt']['user'],
+    $config['dbOpt']['pass']
+);
+$Types  = new Type(
+    $config['dbOpt']['host'],
+    $config['dbOpt']['db'],
+    $config['dbOpt']['user'],
+    $config['dbOpt']['pass']
+);
 $Size   = new Capacity;
-$Models = new Model($config['dbOpt']);
+$Models = new Model(
+    $config['dbOpt']['host'],
+    $config['dbOpt']['db'],
+    $config['dbOpt']['user'],
+    $config['dbOpt']['pass']
+);
 
 $markValues = $Marks->getFromURL();
 
@@ -55,4 +79,7 @@ foreach($markValues as $markValue) {
         }
     }
 }
+
+$syslog->info('Script finished in '.(microtime(true) - $start).' sec.');
+
 echo "\nI'm done.\n";

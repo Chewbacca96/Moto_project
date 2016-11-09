@@ -15,5 +15,6 @@ return [
         'db'   => 'motodb',
         'user' => 'root',
         'pass' => '#Data3456^'
-    ]
+    ],
+    'error_log' => __DIR__.'/logs/php_errors.log'
 ];

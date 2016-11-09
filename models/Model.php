@@ -1,5 +1,5 @@
 <?php
-namespace Motopitlane;
+namespace Moto_project\models;
 
 class Model 
 {
@@ -9,13 +9,34 @@ class Model
     /**
      * Model конструктор
      *
-     * @param array $dbOptions массив опций для подключения к БД
+     * @param string $host доменное имя сервера базы данных
+     * @param string $db имя базы данных
+     * @param string $user логи пользователя базы данных
+     * @param string $pass пароль пользователя базы данных
      */
-    public function __construct($dbOptions) 
+    public function __construct($host, $db, $user, $pass) 
     {
         if(!self::$pdo) {
-            self::$pdo = DB::connectToDB($dbOptions);
+            self::$pdo = DB::connectToDB($host, $db, $user, $pass);
         }
+    }
+
+    /**
+     * Функция парсит полную информацию о модели
+     * 
+     * @param int $markValue код марки модели
+     * @param string $bikeType название типа модели
+     * @param int $capacityValue код объема модели
+     *
+     * @return string строка информации о модели
+     */
+    public function getFromURL($markValue, $bikeType, $capacityValue) 
+    {
+        $data = file_get_contents('https://www.louis.de/en/m/ajax/json/select-from-list?bike-selection-fieldset[manufacturer]='.$markValue.'&bike-selection-fieldset[biketype]='.$bikeType.'&bike-selection-fieldset[capacity]='.$capacityValue.'&bike-selection-fieldset[sortBySelect]=title&sortby=title&get=bikes');
+        $data = json_decode($data, true);
+        unset($data['options'][0]);
+
+        return $data['options'];
     }
 
     /**
@@ -42,6 +63,7 @@ class Model
         }
 
         $data['frameStr'] = substr($title, strripos($title, '(') + 1, strripos($title, ')') - strripos($title, '(') - 1);
+        
         return $data;
     }
 
@@ -58,8 +80,22 @@ class Model
     {
         $data = $this->parseModel($modelData);
 
-        $stmt = self::$pdo->prepare('INSERT INTO motodb.t_model (mark_id, type_id, code, model, capacity, year_start, year_end, frame) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
-        $stmt->execute([$markID, $typeID, $modelData['value'], $data['modelStr'], $modelData['capacity'], $data['yearStart'], $data['yearEnd'], $data['frameStr']]);
+        $stmt = self::$pdo->prepare(
+            'INSERT INTO motodb.t_model (mark_id, type_id, code, model, capacity, year_start, year_end, frame, raw_model) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'
+        );
+        $stmt->execute([
+            $markID, 
+            $typeID, 
+            $modelData['value'], 
+            $data['modelStr'], 
+            $modelData['capacity'], 
+            $data['yearStart'], 
+            $data['yearEnd'], 
+            $data['frameStr'], 
+            $modelData['title']
+        ]);
+        
         return self::$pdo->lastInsertId();
     }
 
@@ -87,23 +123,7 @@ class Model
                 self::$modelFromDB[$modelData['value']] = null;
             }
         }
+        
         return self::$modelFromDB[$modelData['value']];
-    }
-
-    /**
-     * Функция парсит полную информацию о модели
-     * 
-     * @param int $markValue код марки модели
-     * @param string $bikeType название типа модели
-     * @param int $capacityValue код объема модели
-     *
-     * @return string строка информации о модели
-     */
-    public function getFromURL($markValue, $bikeType, $capacityValue) 
-    {
-        $data = file_get_contents("https://www.louis.de/en/m/ajax/json/select-from-list?bike-selection-fieldset[manufacturer]=$markValue&bike-selection-fieldset[biketype]=$bikeType&bike-selection-fieldset[capacity]=$capacityValue&bike-selection-fieldset[sortBySelect]=title&sortby=title&get=bikes");
-        $data = json_decode($data, true);
-        unset($data['options'][0]);
-        return $data['options'];
     }
 }

@@ -1,5 +1,5 @@
 <?php
-namespace Motopitlane;
+namespace Moto_project\models;
 
 use PDO;
 
@@ -10,22 +10,25 @@ class DB
     /**
      * Функция для подключения к базе данных
      *
-     * @param array $dbOptions массив с опциями для подключения к БД
+     * @param string $host доменное имя сервера базы данных
+     * @param string $db имя базы данных
+     * @param string $user логи пользователя базы данных
+     * @param string $pass пароль пользователя базы данных
      *
      * @return object объект, представляющий соединение с сервером базы данных
      */
-    public static function connectToDB($dbOptions) 
+    public static function connectToDB($host, $db, $user, $pass) 
     {
         if (self::$pdo) {
             return self::$pdo;
         }
 
-        $host = $dbOptions['host'];
-        $db   = $dbOptions['db'];
-        $user = $dbOptions['user'];
-        $pass = $dbOptions['pass'];
+        $host = $host;
+        $db   = $db;
+        $user = $user;
+        $pass = $pass;
 
-        $dsn = "mysql:host = $host; dbname = $db";
+        $dsn = 'mysql:host = '.$host.'; dbname = '.$db;
         $options = [
             PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC

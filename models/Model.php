@@ -62,7 +62,11 @@ class Model
             $data['yearEnd'] = null;
         }
 
-        $data['frameStr'] = substr($title, strripos($title, '(') + 1, strripos($title, ')') - strripos($title, '(') - 1);
+        $data['frameStr'] = substr(
+            $title, 
+            stripos($title, '(', strripos($title, ', year')) + 1, 
+            strripos($title, ')') - stripos($title, '(', strripos($title, ', year')) - 1
+        );
         
         return $data;
     }

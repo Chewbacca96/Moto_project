@@ -1,24 +1,26 @@
 -- phpMyAdmin SQL Dump
--- version 3.5.1
--- http://www.phpmyadmin.net
+-- version 4.6.4
+-- https://www.phpmyadmin.net/
 --
--- Хост: 127.0.0.1
--- Время создания: Сен 15 2016 г., 18:38
--- Версия сервера: 5.5.25
--- Версия PHP: 5.3.3
+-- Хост: localhost
+-- Время создания: Ноя 10 2016 г., 08:04
+-- Версия сервера: 5.5.53
+-- Версия PHP: 5.6.27
 
-SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
 -- База данных: `motodb`
 --
+CREATE DATABASE IF NOT EXISTS `motodb` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `motodb`;
 
 -- --------------------------------------------------------
 
@@ -26,12 +28,10 @@ SET time_zone = "+00:00";
 -- Структура таблицы `t_mark`
 --
 
-CREATE TABLE IF NOT EXISTS `t_mark` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `value` text NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `mark_value` (`value`(255))
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+CREATE TABLE `t_mark` (
+  `id` int(11) NOT NULL,
+  `value` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -39,8 +39,8 @@ CREATE TABLE IF NOT EXISTS `t_mark` (
 -- Структура таблицы `t_model`
 --
 
-CREATE TABLE IF NOT EXISTS `t_model` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `t_model` (
+  `id` int(11) NOT NULL,
   `mark_id` int(11) NOT NULL,
   `type_id` int(11) NOT NULL,
   `code` int(11) NOT NULL,
@@ -49,11 +49,8 @@ CREATE TABLE IF NOT EXISTS `t_model` (
   `year_start` int(11) DEFAULT NULL,
   `year_end` int(11) DEFAULT NULL,
   `frame` text NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `idmodel` (`code`),
-  KEY `fk_mark_id` (`mark_id`),
-  KEY `fk_type_id` (`type_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `raw_model` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -61,13 +58,57 @@ CREATE TABLE IF NOT EXISTS `t_model` (
 -- Структура таблицы `t_type`
 --
 
-CREATE TABLE IF NOT EXISTS `t_type` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `value` text NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `type_value` (`value`(255))
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+CREATE TABLE `t_type` (
+  `id` int(11) NOT NULL,
+  `value` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Индексы сохранённых таблиц
+--
+
+--
+-- Индексы таблицы `t_mark`
+--
+ALTER TABLE `t_mark`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `mark_value` (`value`(255));
+
+--
+-- Индексы таблицы `t_model`
+--
+ALTER TABLE `t_model`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `idmodel` (`code`),
+  ADD KEY `fk_mark_id` (`mark_id`),
+  ADD KEY `fk_type_id` (`type_id`);
+
+--
+-- Индексы таблицы `t_type`
+--
+ALTER TABLE `t_type`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `type_value` (`value`(255));
+
+--
+-- AUTO_INCREMENT для сохранённых таблиц
+--
+
+--
+-- AUTO_INCREMENT для таблицы `t_mark`
+--
+ALTER TABLE `t_mark`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT для таблицы `t_model`
+--
+ALTER TABLE `t_model`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT для таблицы `t_type`
+--
+ALTER TABLE `t_type`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- Ограничения внешнего ключа сохраненных таблиц
 --

@@ -1,0 +1,57 @@
+[09-Nov-2016 15:22:26 Europe/Moscow] PHP Fatal error:  Class 'Motopitlane\Mark' not found in /srv/GitHub/Moto_project/index.php on line 26
+[09-Nov-2016 15:40:24 Europe/Moscow] PHP Fatal error:  Class 'Moto_project\models\Mark' not found in /srv/GitHub/Moto_project/index.php on line 26
+[09-Nov-2016 16:15:47 Europe/Moscow] PHP Notice:  Undefined variable: dbuser in /srv/GitHub/Moto_project/models/DB.php on line 28
+[09-Nov-2016 16:15:47 Europe/Moscow] PHP Notice:  Undefined variable: dbpass in /srv/GitHub/Moto_project/models/DB.php on line 29
+[09-Nov-2016 16:15:47 Europe/Moscow] PHP Fatal error:  Uncaught exception 'PDOException' with message 'SQLSTATE[28000] [1045] Access denied for user 'root'@'localhost' (using password: NO)' in /srv/GitHub/Moto_project/models/DB.php:37
+Stack trace:
+#0 /srv/GitHub/Moto_project/models/DB.php(37): PDO->__construct('mysql:host = lo...', NULL, NULL, Array)
+#1 /srv/GitHub/Moto_project/models/Mark.php(23): Moto_project\models\DB::connectToDB('localhost', 'motodb', 'root', '#Data3456^')
+#2 /srv/GitHub/Moto_project/index.php(31): Moto_project\models\Mark->__construct('localhost', 'motodb', 'root', '#Data3456^')
+#3 {main}
+  thrown in /srv/GitHub/Moto_project/models/DB.php on line 37
+[09-Nov-2016 16:18:29 Europe/Moscow] PHP Notice:  Undefined variable: dbuser in /srv/GitHub/Moto_project/models/DB.php on line 28
+[09-Nov-2016 16:18:29 Europe/Moscow] PHP Notice:  Undefined variable: dbpass in /srv/GitHub/Moto_project/models/DB.php on line 29
+[09-Nov-2016 16:18:29 Europe/Moscow] PHP Fatal error:  Uncaught exception 'PDOException' with message 'SQLSTATE[28000] [1045] Access denied for user 'root'@'localhost' (using password: NO)' in /srv/GitHub/Moto_project/models/DB.php:37
+Stack trace:
+#0 /srv/GitHub/Moto_project/models/DB.php(37): PDO->__construct('mysql:host = lo...', NULL, NULL, Array)
+#1 /srv/GitHub/Moto_project/models/Mark.php(23): Moto_project\models\DB::connectToDB('localhost', 'motodb', 'root', '#Data3456^')
+#2 /srv/GitHub/Moto_project/index.php(31): Moto_project\models\Mark->__construct('localhost', 'motodb', 'root', '#Data3456^')
+#3 {main}
+  thrown in /srv/GitHub/Moto_project/models/DB.php on line 37
+[09-Nov-2016 16:19:18 Europe/Moscow] PHP Notice:  Undefined variable: dbuser in /srv/GitHub/Moto_project/models/DB.php on line 28
+[09-Nov-2016 16:19:18 Europe/Moscow] PHP Notice:  Undefined variable: dbpass in /srv/GitHub/Moto_project/models/DB.php on line 29
+[09-Nov-2016 16:19:18 Europe/Moscow] PHP Warning:  Missing argument 2 for Moto_project\models\DB::connectToDB(), called in /srv/GitHub/Moto_project/models/Type.php on line 16 and defined in /srv/GitHub/Moto_project/models/DB.php on line 20
+[09-Nov-2016 16:19:18 Europe/Moscow] PHP Warning:  Missing argument 3 for Moto_project\models\DB::connectToDB(), called in /srv/GitHub/Moto_project/models/Type.php on line 16 and defined in /srv/GitHub/Moto_project/models/DB.php on line 20
+[09-Nov-2016 16:19:18 Europe/Moscow] PHP Warning:  Missing argument 4 for Moto_project\models\DB::connectToDB(), called in /srv/GitHub/Moto_project/models/Type.php on line 16 and defined in /srv/GitHub/Moto_project/models/DB.php on line 20
+[09-Nov-2016 16:19:18 Europe/Moscow] PHP Warning:  Missing argument 2 for Moto_project\models\DB::connectToDB(), called in /srv/GitHub/Moto_project/models/Model.php on line 17 and defined in /srv/GitHub/Moto_project/models/DB.php on line 20
+[09-Nov-2016 16:19:18 Europe/Moscow] PHP Warning:  Missing argument 3 for Moto_project\models\DB::connectToDB(), called in /srv/GitHub/Moto_project/models/Model.php on line 17 and defined in /srv/GitHub/Moto_project/models/DB.php on line 20
+[09-Nov-2016 16:19:18 Europe/Moscow] PHP Warning:  Missing argument 4 for Moto_project\models\DB::connectToDB(), called in /srv/GitHub/Moto_project/models/Model.php on line 17 and defined in /srv/GitHub/Moto_project/models/DB.php on line 20
+[09-Nov-2016 16:21:12 Europe/Moscow] PHP Warning:  Missing argument 2 for Moto_project\models\DB::connectToDB(), called in /srv/GitHub/Moto_project/models/Type.php on line 16 and defined in /srv/GitHub/Moto_project/models/DB.php on line 20
+[09-Nov-2016 16:21:12 Europe/Moscow] PHP Warning:  Missing argument 3 for Moto_project\models\DB::connectToDB(), called in /srv/GitHub/Moto_project/models/Type.php on line 16 and defined in /srv/GitHub/Moto_project/models/DB.php on line 20
+[09-Nov-2016 16:21:12 Europe/Moscow] PHP Warning:  Missing argument 4 for Moto_project\models\DB::connectToDB(), called in /srv/GitHub/Moto_project/models/Type.php on line 16 and defined in /srv/GitHub/Moto_project/models/DB.php on line 20
+[09-Nov-2016 16:21:12 Europe/Moscow] PHP Warning:  Missing argument 2 for Moto_project\models\DB::connectToDB(), called in /srv/GitHub/Moto_project/models/Model.php on line 17 and defined in /srv/GitHub/Moto_project/models/DB.php on line 20
+[09-Nov-2016 16:21:12 Europe/Moscow] PHP Warning:  Missing argument 3 for Moto_project\models\DB::connectToDB(), called in /srv/GitHub/Moto_project/models/Model.php on line 17 and defined in /srv/GitHub/Moto_project/models/DB.php on line 20
+[09-Nov-2016 16:21:12 Europe/Moscow] PHP Warning:  Missing argument 4 for Moto_project\models\DB::connectToDB(), called in /srv/GitHub/Moto_project/models/Model.php on line 17 and defined in /srv/GitHub/Moto_project/models/DB.php on line 20
+[09-Nov-2016 16:21:14 Europe/Moscow] PHP Notice:  Array to string conversion in /srv/GitHub/Moto_project/models/Mark.php on line 37
+[09-Nov-2016 16:21:30 Europe/Moscow] PHP Warning:  Missing argument 2 for Moto_project\models\DB::connectToDB(), called in /srv/GitHub/Moto_project/models/Type.php on line 16 and defined in /srv/GitHub/Moto_project/models/DB.php on line 20
+[09-Nov-2016 16:21:30 Europe/Moscow] PHP Warning:  Missing argument 3 for Moto_project\models\DB::connectToDB(), called in /srv/GitHub/Moto_project/models/Type.php on line 16 and defined in /srv/GitHub/Moto_project/models/DB.php on line 20
+[09-Nov-2016 16:21:30 Europe/Moscow] PHP Warning:  Missing argument 4 for Moto_project\models\DB::connectToDB(), called in /srv/GitHub/Moto_project/models/Type.php on line 16 and defined in /srv/GitHub/Moto_project/models/DB.php on line 20
+[09-Nov-2016 16:21:30 Europe/Moscow] PHP Warning:  Missing argument 2 for Moto_project\models\DB::connectToDB(), called in /srv/GitHub/Moto_project/models/Model.php on line 17 and defined in /srv/GitHub/Moto_project/models/DB.php on line 20
+[09-Nov-2016 16:21:30 Europe/Moscow] PHP Warning:  Missing argument 3 for Moto_project\models\DB::connectToDB(), called in /srv/GitHub/Moto_project/models/Model.php on line 17 and defined in /srv/GitHub/Moto_project/models/DB.php on line 20
+[09-Nov-2016 16:21:30 Europe/Moscow] PHP Warning:  Missing argument 4 for Moto_project\models\DB::connectToDB(), called in /srv/GitHub/Moto_project/models/Model.php on line 17 and defined in /srv/GitHub/Moto_project/models/DB.php on line 20
+[09-Nov-2016 16:22:53 Europe/Moscow] PHP Warning:  Missing argument 2 for Moto_project\models\DB::connectToDB(), called in /srv/GitHub/Moto_project/models/Type.php on line 16 and defined in /srv/GitHub/Moto_project/models/DB.php on line 20
+[09-Nov-2016 16:22:53 Europe/Moscow] PHP Warning:  Missing argument 3 for Moto_project\models\DB::connectToDB(), called in /srv/GitHub/Moto_project/models/Type.php on line 16 and defined in /srv/GitHub/Moto_project/models/DB.php on line 20
+[09-Nov-2016 16:22:53 Europe/Moscow] PHP Warning:  Missing argument 4 for Moto_project\models\DB::connectToDB(), called in /srv/GitHub/Moto_project/models/Type.php on line 16 and defined in /srv/GitHub/Moto_project/models/DB.php on line 20
+[09-Nov-2016 16:22:53 Europe/Moscow] PHP Warning:  Missing argument 2 for Moto_project\models\DB::connectToDB(), called in /srv/GitHub/Moto_project/models/Model.php on line 17 and defined in /srv/GitHub/Moto_project/models/DB.php on line 20
+[09-Nov-2016 16:22:53 Europe/Moscow] PHP Warning:  Missing argument 3 for Moto_project\models\DB::connectToDB(), called in /srv/GitHub/Moto_project/models/Model.php on line 17 and defined in /srv/GitHub/Moto_project/models/DB.php on line 20
+[09-Nov-2016 16:22:53 Europe/Moscow] PHP Warning:  Missing argument 4 for Moto_project\models\DB::connectToDB(), called in /srv/GitHub/Moto_project/models/Model.php on line 17 and defined in /srv/GitHub/Moto_project/models/DB.php on line 20
+[09-Nov-2016 16:50:41 Europe/Moscow] PHP Warning:  Missing argument 2 for Moto_project\models\Type::__construct(), called in /srv/GitHub/Moto_project/index.php on line 32 and defined in /srv/GitHub/Moto_project/models/Type.php on line 17
+[09-Nov-2016 16:50:41 Europe/Moscow] PHP Warning:  Missing argument 3 for Moto_project\models\Type::__construct(), called in /srv/GitHub/Moto_project/index.php on line 32 and defined in /srv/GitHub/Moto_project/models/Type.php on line 17
+[09-Nov-2016 16:50:41 Europe/Moscow] PHP Warning:  Missing argument 4 for Moto_project\models\Type::__construct(), called in /srv/GitHub/Moto_project/index.php on line 32 and defined in /srv/GitHub/Moto_project/models/Type.php on line 17
+[09-Nov-2016 16:50:41 Europe/Moscow] PHP Notice:  Undefined variable: db in /srv/GitHub/Moto_project/models/Type.php on line 19
+[09-Nov-2016 16:50:41 Europe/Moscow] PHP Notice:  Undefined variable: user in /srv/GitHub/Moto_project/models/Type.php on line 19
+[09-Nov-2016 16:50:41 Europe/Moscow] PHP Notice:  Undefined variable: pass in /srv/GitHub/Moto_project/models/Type.php on line 19
+[09-Nov-2016 16:50:41 Europe/Moscow] PHP Warning:  Missing argument 2 for Moto_project\models\DB::connectToDB(), called in /srv/GitHub/Moto_project/models/Model.php on line 17 and defined in /srv/GitHub/Moto_project/models/DB.php on line 20
+[09-Nov-2016 16:50:41 Europe/Moscow] PHP Warning:  Missing argument 3 for Moto_project\models\DB::connectToDB(), called in /srv/GitHub/Moto_project/models/Model.php on line 17 and defined in /srv/GitHub/Moto_project/models/DB.php on line 20
+[09-Nov-2016 16:50:41 Europe/Moscow] PHP Warning:  Missing argument 4 for Moto_project\models\DB::connectToDB(), called in /srv/GitHub/Moto_project/models/Model.php on line 17 and defined in /srv/GitHub/Moto_project/models/DB.php on line 20
+[10-Nov-2016 10:07:34 Europe/Moscow] PHP Parse error:  syntax error, unexpected 'else' (T_ELSE), expecting function (T_FUNCTION) in /srv/GitHub/Moto_project/models/Model.php on line 56
